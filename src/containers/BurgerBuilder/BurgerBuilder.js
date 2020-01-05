@@ -25,6 +25,7 @@ class BurgerBuilder extends Component {
         error: false
     }
     componentDidMount() {
+        console.log(this.props)
         axios.get('https://react-my-burger-b0db1.firebaseio.com/ingredients.json')
             .then(response => {
                 this.setState({ ingredients: response.data })
@@ -82,30 +83,39 @@ class BurgerBuilder extends Component {
         this.setState({ purchasing: false })
     }
     purchaseContinueHandler = () => {
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: "Max Schwarxmüller",
-                address: {
-                    street: 'Teststreet 1',
-                    zipCode: '410021',
-                    country: 'German'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
+        // this.setState({ loading: true });
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: "Max Schwarxmüller",
+        //         address: {
+        //             street: 'Teststreet 1',
+        //             zipCode: '410021',
+        //             country: 'German'
+        //         },
+        //         email: 'test@test.com'
+        //     },
+        //     deliveryMethod: 'fastest'
+        // }
+        // axios.post('/orders.json', order)
+        //     .then(response => {
+        //         setTimeout(() => {
+        //             this.setState({ loading: false, purchasing: false });
+        //         }, 600);
+        //     })
+        //     .catch(error => {
+        //         this.setState({ loading: false, purchasing: false });
+        //     })
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                setTimeout(() => {
-                    this.setState({ loading: false, purchasing: false });
-                }, 600);
-            })
-            .catch(error => {
-                this.setState({ loading: false, purchasing: false });
-            })
+        const queryString = queryParams.join('&')
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        });
     }
     render() {
         const disabledInfo = {
