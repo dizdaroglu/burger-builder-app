@@ -5,6 +5,7 @@ import './CheckoutSummary.css';
 
 
 const checkoutSummary = (props) => {
+    console.log('hey')
     return (
         <div className="CheckoutSummary">
             <h1>We hope it tastes well!</h1>
